@@ -15,6 +15,13 @@ $ wa g https://github.com/icyleaf/fish-pkg-docker
 $ omf install https://github.com/icyleaf/fish-pkg-docker
 ```
 
+## Usage
+
+By default, developer always call `eval (docker-machine env default)` during open a new terminal window(tab),
+this plugins will automate call the command that you can use `docker` command in anywhere.
+
+Tab competions just added basic subcommand description, more is in comming. enjoy it.
+
 # License
 
 [MIT][mit] © [icyleaf][author]
