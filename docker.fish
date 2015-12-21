@@ -8,9 +8,7 @@ function init -a path --on-event init_docker
     set DOCKER_DEFAULT_MACHINE "default"
   end
 
-  set -g DOCKER_MACHINE_STATUS
   set -g DOCKER_MACHINES
-
 
   function __fish_docker_machines
     set DOCKER_MACHINES (docker-machine ls | grep -v "NAME" | awk '{print $1}')
