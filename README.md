@@ -2,7 +2,7 @@
 
 # docker
 
-Automate loading `default` docker-machine environment and add missing tab competions for Fish Shell.
+Automate loading `default` docker-machine environment and add missing tab completion for Fish Shell.
 
 Available in [Wahoo][Wahoo-link]/[Oh My Fish][omf-link].
 
@@ -18,9 +18,25 @@ $ omf install https://github.com/icyleaf/fish-pkg-docker
 ## Usage
 
 By default, developer always call `eval (docker-machine env default)` during open a new terminal window(tab),
-this plugins will automate call the command that you can use `docker` command in anywhere.
+this plugins will automate call the command that you can use `docker` command in anywhere. of cause, here is
+a variable to set to change default machine name:
 
-Tab competions just added basic subcommand description, more is in comming. enjoy it.
+```fish
+# File: ~/.config/fish/config.fish
+
+set -gx DOCKER_DEFAULT_MACHINE "dev"`
+
+# Load wa/omf init script
+```
+
+Tab completion just added basic subcommand description, more is in coming. enjoy it.
+
+## Functions
+
+function | description
+---|---
+docker-current | Show current used docker machine
+docker-use | Switch docker machine
 
 # License
 
