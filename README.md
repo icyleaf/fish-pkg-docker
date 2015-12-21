@@ -24,7 +24,7 @@ a variable to set to change default machine name:
 ```fish
 # File: ~/.config/fish/config.fish
 
-set -gx DOCKER_DEFAULT_MACHINE "dev"`
+set -gx DOCKER_DEFAULT_MACHINE "dev"
 
 # Load wa/omf init script
 ```
