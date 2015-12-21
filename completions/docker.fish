@@ -25,70 +25,393 @@ function __fish_docker_image_names
 end
 
 function __fish_docker_ps_container_names
-  set containers (docker ps -a | awk '{print $1}' | grep -v CONTAINER)
+  set containers (docker ps -a | awk '{print $NF}' | grep -v NAMES)
+  for name in $containers
+    echo $name
+  end
 end
 
 function __fish_docker_ps_image_names
   set containers (docker ps -a | awk '{print $2}' | grep -v IMAGE)
 end
 
+# Options
+complete -f -c docker -n '__fish_docker_needs_command' -l config -d "Location of client config files"
+complete -f -c docker -n '__fish_docker_needs_command' -s D -l debug -d "Enable debug mode"
+complete -f -c docker -n '__fish_docker_needs_command' -s H -l host -d "Daemon socket(s) to connect to"
+complete -f -c docker -n '__fish_docker_needs_command' -s h -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_needs_command' -s l -l loglevel -d "Set the logging level"
+complete -f -c docker -n '__fish_docker_needs_command' -l tls -d "Use TLS; implied by --tlsverify"
+complete -f -c docker -n '__fish_docker_needs_command' -l tlscacert -d "Trust certs signed only by this CA"
+complete -f -c docker -n '__fish_docker_needs_command' -l tlscert -d "Path to TLS certificate file"
+complete -f -c docker -n '__fish_docker_needs_command' -l tlskey -d "Path to TLS key file"
+complete -f -c docker -n '__fish_docker_needs_command' -l tlsverify -d "Use TLS and verify the remote"
+complete -f -c docker -n '__fish_docker_needs_command' -s v -l version -d "Print version information and quit"
 
-complete -f -c docker -n '__fish_docker_needs_command' -a attach    -d "Attach to a running container"
-complete -f -c docker -n '__fish_docker_needs_command' -a build     -d "Build an image from a Dockerfile"
-complete -f -c docker -n '__fish_docker_needs_command' -a commit    -d "Create a new image from a container's changes"
-complete -f -c docker -n '__fish_docker_needs_command' -a cp        -d "Copy files/folders between a container and the local filesystem"
-complete -f -c docker -n '__fish_docker_needs_command' -a create    -d "Create a new container"
-complete -f -c docker -n '__fish_docker_needs_command' -a diff      -d "Inspect changes on a container's filesystem"
-complete -f -c docker -n '__fish_docker_needs_command' -a events    -d "Get real time events from the server"
-complete -f -c docker -n '__fish_docker_needs_command' -a exec      -d "Run a command in a running container"
-complete -f -c docker -n '__fish_docker_needs_command' -a export    -d "Export a container's filesystem as a tar archive"
-complete -f -c docker -n '__fish_docker_needs_command' -a history   -d "Show the history of an image"
-complete -f -c docker -n '__fish_docker_needs_command' -a images    -d "List images"
+# Subcommands
+## attach
+complete -f -c docker -n '__fish_docker_needs_command' -a attach -d "Attach to a running container"
+complete -f -c docker -n '__fish_docker_using_command attach' -a '(__fish_docker_ps_container_names)'
+complete -f -c docker -n '__fish_docker_using_command attach' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command attach' -l nostdin -d "Do not attach STDIN"
+complete -f -c docker -n '__fish_docker_using_command attach' -l sigproxy -d "Proxy all received signals to the process"
 
-# images
-complete -f -c docker -n '__fish_docker_needs_command' -a import    -d "Import the contents from a tarball to create a filesystem image"
+## build
+complete -f -c docker -n '__fish_docker_needs_command' -a build -d "Build an image from a Dockerfile"
+complete -f -c docker -n '__fish_docker_using_command build' -l buildarg -d "Set build-time variables"
+complete -f -c docker -n '__fish_docker_using_command build' -l cpushares -d "CPU shares (relative weight)"
+complete -f -c docker -n '__fish_docker_using_command build' -l cgroupparent -d "Optional parent cgroup for the container"
+complete -f -c docker -n '__fish_docker_using_command build' -l cpuperiod -d "Limit the CPU CFS (Completely Fair Scheduler) period"
+complete -f -c docker -n '__fish_docker_using_command build' -l cpuquota -d "Limit the CPU CFS (Completely Fair Scheduler) quota"
+complete -f -c docker -n '__fish_docker_using_command build' -l cpusetcpus -d "CPUs in which to allow execution (0-3, 0,1)"
+complete -f -c docker -n '__fish_docker_using_command build' -l cpusetmems -d "MEMs in which to allow execution (0-3, 0,1)"
+complete -f -c docker -n '__fish_docker_using_command build' -l disablecontenttrust -d "Skip image verification"
+complete -f -c docker -n '__fish_docker_using_command build' -s f -l file -d "Name of the Dockerfile (Default is 'PATH/Dockerfile')"
+complete -f -c docker -n '__fish_docker_using_command build' -l forcerm -d "Always remove intermediate containers"
+complete -f -c docker -n '__fish_docker_using_command build' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command build' -s m -l memory -d "Memory limit"
+complete -f -c docker -n '__fish_docker_using_command build' -l memoryswap -d "Total memory (memory + swap), '-1' to disable swap"
+complete -f -c docker -n '__fish_docker_using_command build' -l nocache -d "Do not use cache when building the image"
+complete -f -c docker -n '__fish_docker_using_command build' -l pull -d "Always attempt to pull a newer version of the image"
+complete -f -c docker -n '__fish_docker_using_command build' -s q -l quiet -d "Suppress the verbose output generated by the containers"
+complete -f -c docker -n '__fish_docker_using_command build' -l rm -d "Remove intermediate containers after a successful build"
+complete -f -c docker -n '__fish_docker_using_command build' -s t -l tag -d "Repository name (and optionally a tag) for the image"
+complete -f -c docker -n '__fish_docker_using_command build' -l ulimit -d "Ulimit options"
+
+## commit
+complete -f -c docker -n '__fish_docker_needs_command' -a commit -d "Create a new image from a container's changes"
+complete -f -c docker -n '__fish_docker_using_command commit' -s a -l author -d "Author (e.g., "John Hannibal Smith <hannibal@a-team.com>")"
+complete -f -c docker -n '__fish_docker_using_command commit' -s c -l change -d "Apply Dockerfile instruction to the created image"
+complete -f -c docker -n '__fish_docker_using_command commit' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command commit' -s m -l message -d "Commit message"
+complete -f -c docker -n '__fish_docker_using_command commit' -s p -l pause -d "Pause container during commit"
+
+## cp
+complete -f -c docker -n '__fish_docker_needs_command' -a cp -d "Copy files/folders between a container and the local filesystem"
+complete -f -c docker -n '__fish_docker_using_command cp' -l help -d "Print usage"
+
+## create
+complete -f -c docker -n '__fish_docker_needs_command' -a create -d "Create a new container"
+complete -f -c docker -n '__fish_docker_using_command create' -s a -l attach -d "Attach to STDIN, STDOUT or STDERR"
+complete -f -c docker -n '__fish_docker_using_command create' -l addhost -d "Add a custom host-to-IP mapping (host:ip)"
+complete -f -c docker -n '__fish_docker_using_command create' -l blkioweight -d "Block IO (relative weight), between 10 and 1000"
+complete -f -c docker -n '__fish_docker_using_command create' -l cpushares -d "CPU shares (relative weight)"
+complete -f -c docker -n '__fish_docker_using_command create' -l capadd -d "Add Linux capabilities"
+complete -f -c docker -n '__fish_docker_using_command create' -l capdrop -d "Drop Linux capabilities"
+complete -f -c docker -n '__fish_docker_using_command create' -l cgroupparent -d "Optional parent cgroup for the container"
+complete -f -c docker -n '__fish_docker_using_command create' -l cidfile -d "Write the container ID to the file"
+complete -f -c docker -n '__fish_docker_using_command create' -l cpuperiod -d "Limit CPU CFS (Completely Fair Scheduler) period"
+complete -f -c docker -n '__fish_docker_using_command create' -l cpuquota -d "Limit CPU CFS (Completely Fair Scheduler) quota"
+complete -f -c docker -n '__fish_docker_using_command create' -l cpusetcpus -d "CPUs in which to allow execution (0-3, 0,1)"
+complete -f -c docker -n '__fish_docker_using_command create' -l cpusetmems -d "MEMs in which to allow execution (0-3, 0,1)"
+complete -f -c docker -n '__fish_docker_using_command create' -l device -d "Add a host device to the container"
+complete -f -c docker -n '__fish_docker_using_command create' -l disablecontenttrust -d "Skip image verification"
+complete -f -c docker -n '__fish_docker_using_command create' -l dns -d "Set custom DNS servers"
+complete -f -c docker -n '__fish_docker_using_command create' -l dnsopt -d "Set DNS options"
+complete -f -c docker -n '__fish_docker_using_command create' -l dnssearch -d "Set custom DNS search domains"
+complete -f -c docker -n '__fish_docker_using_command create' -s e -l env -d "Set environment variables"
+complete -f -c docker -n '__fish_docker_using_command create' -l entrypoint -d "Overwrite the default ENTRYPOINT of the image"
+complete -f -c docker -n '__fish_docker_using_command create' -l envfile -d "Read in a file of environment variables"
+complete -f -c docker -n '__fish_docker_using_command create' -l expose -d "Expose a port or a range of ports"
+complete -f -c docker -n '__fish_docker_using_command create' -l groupadd -d "Add additional groups to join"
+complete -f -c docker -n '__fish_docker_using_command create' -s h -l hostname -d "Container host name"
+complete -f -c docker -n '__fish_docker_using_command create' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command create' -s i -l interactive -d "Keep STDIN open even if not attached"
+complete -f -c docker -n '__fish_docker_using_command create' -l ipc -d "IPC namespace to use"
+complete -f -c docker -n '__fish_docker_using_command create' -l kernelmemory -d "Kernel memory limit"
+complete -f -c docker -n '__fish_docker_using_command create' -s l -l label -d "Set meta data on a container"
+complete -f -c docker -n '__fish_docker_using_command create' -l labelfile -d "Read in a line delimited file of labels"
+complete -f -c docker -n '__fish_docker_using_command create' -l link -d "Add link to another container"
+complete -f -c docker -n '__fish_docker_using_command create' -l logdriver -d "Logging driver for container"
+complete -f -c docker -n '__fish_docker_using_command create' -l logopt -d "Log driver options"
+complete -f -c docker -n '__fish_docker_using_command create' -l lxcconf -d "Add custom lxc options"
+complete -f -c docker -n '__fish_docker_using_command create' -s m -l memory -d "Memory limit"
+complete -f -c docker -n '__fish_docker_using_command create' -l macaddress -d "Container MAC address (e.g. 92:d0:c6:0a:29:33)"
+complete -f -c docker -n '__fish_docker_using_command create' -l memoryreservation -d "Memory soft limit"
+complete -f -c docker -n '__fish_docker_using_command create' -l memoryswap -d "Total memory (memory + swap), '-1' to disable swap"
+complete -f -c docker -n '__fish_docker_using_command create' -l memoryswappiness -d "Tuning container memory swappiness (0 to 100)"
+complete -f -c docker -n '__fish_docker_using_command create' -l name -d "Assign a name to the container"
+complete -f -c docker -n '__fish_docker_using_command create' -l net -d "Set the Network for the container"
+complete -f -c docker -n '__fish_docker_using_command create' -l oomkilldisable -d "Disable OOM Killer"
+complete -f -c docker -n '__fish_docker_using_command create' -s P -l publishall -d "Publish all exposed ports to random ports"
+complete -f -c docker -n '__fish_docker_using_command create' -s p -l publish -d "Publish a container's port(s) to the host"
+complete -f -c docker -n '__fish_docker_using_command create' -l pid -d "PID namespace to use"
+complete -f -c docker -n '__fish_docker_using_command create' -l privileged -d "Give extended privileges to this container"
+complete -f -c docker -n '__fish_docker_using_command create' -l readonly -d "Mount the container's root filesystem as read only"
+complete -f -c docker -n '__fish_docker_using_command create' -l restart -d "Restart policy to apply when a container exits"
+complete -f -c docker -n '__fish_docker_using_command create' -l securityopt -d "Security Options"
+complete -f -c docker -n '__fish_docker_using_command create' -l stopsignal -d "Signal to stop a container, SIGTERM by default"
+complete -f -c docker -n '__fish_docker_using_command create' -s t -l tty -d "Allocate a pseudo-TTY"
+complete -f -c docker -n '__fish_docker_using_command create' -s u -l user -d "Username or UID (format: <name|uid>[:<group|gid>])"
+complete -f -c docker -n '__fish_docker_using_command create' -l ulimit -d "Ulimit options"
+complete -f -c docker -n '__fish_docker_using_command create' -l uts -d "UTS namespace to use"
+complete -f -c docker -n '__fish_docker_using_command create' -s v -l volume -d "Bind mount a volume"
+complete -f -c docker -n '__fish_docker_using_command create' -l volumedriver -d "Optional volume driver for the container"
+complete -f -c docker -n '__fish_docker_using_command create' -l volumesfrom -d "Mount volumes from the specified container(s)"
+complete -f -c docker -n '__fish_docker_using_command create' -s w -l workdir -d "Working directory inside the container"
+
+## diff
+complete -f -c docker -n '__fish_docker_needs_command' -a diff -d "Inspect changes on a container's filesystem"
+complete -f -c docker -n '__fish_docker_using_command diff' -l help -d "Print usage"
+
+## events
+complete -f -c docker -n '__fish_docker_needs_command' -a events -d "Get real time events from the server"
+complete -f -c docker -n '__fish_docker_using_command events' -s f -l filter -d "Filter output based on conditions provided"
+complete -f -c docker -n '__fish_docker_using_command events' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command events' -l since -d "Show all events created since timestamp"
+complete -f -c docker -n '__fish_docker_using_command events' -l until -d "Stream events until this timestamp"
+
+## exec
+complete -f -c docker -n '__fish_docker_needs_command' -a exec -d "Run a command in a running container"
+complete -f -c docker -n '__fish_docker_using_command exec' -s d -l detach -d "Detached mode: run command in the background"
+complete -f -c docker -n '__fish_docker_using_command exec' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command exec' -s i -l interactive -d "Keep STDIN open even if not attached"
+complete -f -c docker -n '__fish_docker_using_command exec' -l privileged -d "Give extended privileges to the command"
+complete -f -c docker -n '__fish_docker_using_command exec' -s t -l tty -d "Allocate a pseudo-TTY"
+complete -f -c docker -n '__fish_docker_using_command exec' -s u -l user -d "Username or UID (format: <name|uid>[:<group|gid>])"
+
+## export
+complete -f -c docker -n '__fish_docker_needs_command' -a export -d "Export a container's filesystem as a tar archive"
+complete -f -c docker -n '__fish_docker_using_command export' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command export' -s o -l output -d "Write to a file, instead of STDOUT"
+
+## history
+complete -f -c docker -n '__fish_docker_needs_command' -a history -d "Show the history of an image"
+complete -f -c docker -n '__fish_docker_using_command history' -s H -l human -d "Print sizes and dates in human readable format"
+complete -f -c docker -n '__fish_docker_using_command history' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command history' -l notrunc -d "Don't truncate output"
+complete -f -c docker -n '__fish_docker_using_command history' -s q -l quiet -d "Only show numeric IDs"
+
+## images
+complete -f -c docker -n '__fish_docker_needs_command' -a images -d "List images"
 complete -f -c docker -n '__fish_docker_using_command images' -a '(__fish_docker_image_names)'
+complete -f -c docker -n '__fish_docker_using_command images' -s a -l all -d "Show all images (default hides intermediate images)"
+complete -f -c docker -n '__fish_docker_using_command images' -l digests -d "Show digests"
+complete -f -c docker -n '__fish_docker_using_command images' -s f -l filter -d "Filter output based on conditions provided"
+complete -f -c docker -n '__fish_docker_using_command images' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command images' -l notrunc -d "Don't truncate output"
+complete -f -c docker -n '__fish_docker_using_command images' -s q -l quiet -d "Only show numeric IDs"
 
-complete -f -c docker -n '__fish_docker_needs_command' -a info      -d "Display system-wide information"
-complete -f -c docker -n '__fish_docker_needs_command' -a inspect   -d "Return low-level information on a container or image"
-complete -f -c docker -n '__fish_docker_needs_command' -a kill      -d "Kill a running container"
-complete -f -c docker -n '__fish_docker_needs_command' -a load      -d "Load an image from a tar archive or STDIN"
-complete -f -c docker -n '__fish_docker_needs_command' -a login     -d "Register or log in to a Docker registry"
-complete -f -c docker -n '__fish_docker_needs_command' -a logout    -d "Log out from a Docker registry"
-complete -f -c docker -n '__fish_docker_needs_command' -a logs      -d "Fetch the logs of a container"
-complete -f -c docker -n '__fish_docker_needs_command' -a network   -d "Manage Docker networks"
-complete -f -c docker -n '__fish_docker_needs_command' -a pause     -d "Pause all processes within a container"
-complete -f -c docker -n '__fish_docker_needs_command' -a port      -d "List port mappings or a specific mapping for the CONTAINER"
+## import
+complete -f -c docker -n '__fish_docker_needs_command' -a import -d "Import the contents from a tarball to create a filesystem image"
+complete -f -c docker -n '__fish_docker_using_command import' -s c -l change -d "Apply Dockerfile instruction to the created image"
+complete -f -c docker -n '__fish_docker_using_command import' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command import' -s m -l message -d "Set commit message for imported image"
 
-# ps
-complete -f -c docker -n '__fish_docker_needs_command' -a ps        -d "List containers"
+## info
+complete -f -c docker -n '__fish_docker_needs_command' -a info -d "Display system-wide information"
+complete -f -c docker -n '__fish_docker_using_command info' -l help -d "Print usage"
+
+## inspect
+complete -f -c docker -n '__fish_docker_needs_command' -a inspect -d "Return low-level information on a container or image"
+complete -f -c docker -n '__fish_docker_using_command inspect' -s f -l format -d "Format the output using the given go template"
+complete -f -c docker -n '__fish_docker_using_command inspect' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command inspect' -s s -l size -d "Display total file sizes if the type is container"
+complete -f -c docker -n '__fish_docker_using_command inspect' -l type -d "Return JSON for specified type, (e.g image or container)"
+
+## kill
+complete -f -c docker -n '__fish_docker_needs_command' -a kill -d "Kill a running container"
+complete -f -c docker -n '__fish_docker_using_command kill' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command kill' -s s -l signal -d "Signal to send to the container"
+
+## load
+complete -f -c docker -n '__fish_docker_needs_command' -a load -d "Load an image from a tar archive or STDIN"
+complete -f -c docker -n '__fish_docker_using_command load' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command load' -s i -l input -d "Read from a tar archive file, instead of STDIN"
+
+## login
+complete -f -c docker -n '__fish_docker_needs_command' -a login -d "Register or log in to a Docker registry"
+complete -f -c docker -n '__fish_docker_using_command login' -s e -l email -d "Email"
+complete -f -c docker -n '__fish_docker_using_command login' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command login' -s p -l password -d "Password"
+complete -f -c docker -n '__fish_docker_using_command login' -s u -l username -d "Username"
+
+## logout
+complete -f -c docker -n '__fish_docker_needs_command' -a logout -d "Log out from a Docker registry"
+complete -f -c docker -n '__fish_docker_using_command logout' -l help -d "Print usage"
+
+## logs
+complete -f -c docker -n '__fish_docker_needs_command' -a logs -d "Fetch the logs of a container"
+complete -f -c docker -n '__fish_docker_using_command logs' -s f -l follow -d "Follow log output"
+complete -f -c docker -n '__fish_docker_using_command logs' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command logs' -l since -d "Show logs since timestamp"
+complete -f -c docker -n '__fish_docker_using_command logs' -s t -l timestamps -d "Show timestamps"
+complete -f -c docker -n '__fish_docker_using_command logs' -l tail -d "Number of lines to show from the end of the logs"
+
+## network
+complete -f -c docker -n '__fish_docker_needs_command' -a network -d "Manage Docker networks"
+complete -f -c docker -n '__fish_docker_using_command network' -l help -d "Print usage"
+
+## pause
+complete -f -c docker -n '__fish_docker_needs_command' -a pause -d "Pause all processes within a container"
+complete -f -c docker -n '__fish_docker_using_command pause' -l help -d "Print usage"
+
+## port
+complete -f -c docker -n '__fish_docker_needs_command' -a port -d "List port mappings or a specific mapping for the CONTAINER"
+complete -f -c docker -n '__fish_docker_using_command port' -l help -d "Print usage"
+
+## ps
+complete -f -c docker -n '__fish_docker_needs_command' -a ps -d "List containers"
 complete -f -c docker -n '__fish_docker_using_command ps' -a '(__fish_docker_ps_container_names)'
-complete -f -c docker -n '__fish_docker_using_command ps' -s a -l all -d 'Show all containers (default shows just running)'
-complete -f -c docker -n '__fish_docker_using_command ps' -s q -d 'Only display numeric IDs'
+complete -f -c docker -n '__fish_docker_using_command ps' -s a -l all -d "Show all containers (default shows just running)"
+complete -f -c docker -n '__fish_docker_using_command ps' -l before -d "Show only container created before Id or Name"
+complete -f -c docker -n '__fish_docker_using_command ps' -s f -l filter -d "Filter output based on conditions provided"
+complete -f -c docker -n '__fish_docker_using_command ps' -l format -d "Pretty-print containers using a Go template"
+complete -f -c docker -n '__fish_docker_using_command ps' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command ps' -s l -l latest -d "Show the latest created container, include non-running"
+complete -f -c docker -n '__fish_docker_using_command ps' -s n=1 -d "Show n last created containers, include non-running"
+complete -f -c docker -n '__fish_docker_using_command ps' -l notrunc -d "Don't truncate output"
+complete -f -c docker -n '__fish_docker_using_command ps' -s q -l quiet -d "Only display numeric IDs"
+complete -f -c docker -n '__fish_docker_using_command ps' -s s -l size -d "Display total file sizes"
+complete -f -c docker -n '__fish_docker_using_command ps' -l since -d "Show created since Id or Name, include non-running"
 
+## pull
+complete -f -c docker -n '__fish_docker_needs_command' -a pull -d "Pull an image or a repository from a registry"
+complete -f -c docker -n '__fish_docker_using_command pull' -s a -l alltags -d "Download all tagged images in the repository"
+complete -f -c docker -n '__fish_docker_using_command pull' -l disablecontenttrust -d "Skip image verification"
+complete -f -c docker -n '__fish_docker_using_command pull' -l help -d "Print usage"
 
-complete -f -c docker -n '__fish_docker_needs_command' -a pull      -d "Pull an image or a repository from a registry"
-complete -f -c docker -n '__fish_docker_needs_command' -a push      -d "Push an image or a repository to a registry"
-complete -f -c docker -n '__fish_docker_needs_command' -a rename    -d "Rename a container"
-complete -f -c docker -n '__fish_docker_needs_command' -a restart   -d "Restart a container"
+## push
+complete -f -c docker -n '__fish_docker_needs_command' -a push -d "Push an image or a repository to a registry"
+complete -f -c docker -n '__fish_docker_using_command push' -l disablecontenttrust -d "Skip image signing"
+complete -f -c docker -n '__fish_docker_using_command push' -l help -d "Print usage"
 
-complete -f -c docker -n '__fish_docker_needs_command' -a rm        -d "Remove one or more containers"
-complete -f -c docker -n '__fish_docker_using_command rmi' -a '(__fish_docker_ps_image_names)'
+## rename
+complete -f -c docker -n '__fish_docker_needs_command' -a rename -d "Rename a container"
+complete -f -c docker -n '__fish_docker_using_command rename' -a '(__fish_docker_ps_container_names)'
+complete -f -c docker -n '__fish_docker_using_command rename' -l help -d "Print usage"
 
-# rmi
-complete -f -c docker -n '__fish_docker_needs_command' -a rmi       -d "Remove one or more images"
-complete -f -c docker -n '__fish_docker_using_command rmi' -a '(__fish_docker_ps_container_names)'
+## restart
+complete -f -c docker -n '__fish_docker_needs_command' -a restart -d "Restart a container"
+complete -f -c docker -n '__fish_docker_using_command restart' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command restart' -s t -l time -d "Seconds to wait for stop before killing the container"
 
-complete -f -c docker -n '__fish_docker_needs_command' -a run       -d "Run a command in a new container"
-complete -f -c docker -n '__fish_docker_needs_command' -a save      -d "Save an image(s) to a tar archive"
-complete -f -c docker -n '__fish_docker_needs_command' -a search    -d "Search the Docker Hub for images"
-complete -f -c docker -n '__fish_docker_needs_command' -a start     -d "Start one or more stopped containers"
-complete -f -c docker -n '__fish_docker_needs_command' -a stats     -d "Display a live stream of container(s) resource usage statistics"
-complete -f -c docker -n '__fish_docker_needs_command' -a stop      -d "Stop a running container"
-complete -f -c docker -n '__fish_docker_needs_command' -a tag       -d "Tag an image into a repository"
-complete -f -c docker -n '__fish_docker_needs_command' -a top       -d "Display the running processes of a container"
-complete -f -c docker -n '__fish_docker_needs_command' -a unpause   -d "Unpause all processes within a container"
-complete -f -c docker -n '__fish_docker_needs_command' -a version   -d "Show the Docker version information"
-complete -f -c docker -n '__fish_docker_needs_command' -a volume    -d "Manage Docker volumes"
-complete -f -c docker -n '__fish_docker_needs_command' -a wait      -d "Block until a container stops, then print its exit code"
+## rm
+complete -f -c docker -n '__fish_docker_needs_command' -a rm -d "Remove one or more containers"
+complete -f -c docker -n '__fish_docker_using_command rm' -s f -l force -d "Force the removal of a running container (uses SIGKILL)"
+complete -f -c docker -n '__fish_docker_using_command rm' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command rm' -s l -l link -d "Remove the specified link"
+complete -f -c docker -n '__fish_docker_using_command rm' -s v -l volumes -d "Remove the volumes associated with the container"
 
+## rmi
+complete -f -c docker -n '__fish_docker_needs_command' -a rmi -d "Remove one or more images"
+complete -f -c docker -n '__fish_docker_using_command rmi' -s f -l force -d "Force removal of the image"
+complete -f -c docker -n '__fish_docker_using_command rmi' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command rmi' -l noprune -d "Do not delete untagged parents"
+
+## run
+complete -f -c docker -n '__fish_docker_needs_command' -a run -d "Run a command in a new container"
+complete -f -c docker -n '__fish_docker_using_command run' -s a -l attach -d "Attach to STDIN, STDOUT or STDERR"
+complete -f -c docker -n '__fish_docker_using_command run' -l addhost -d "Add a custom host-to-IP mapping (host:ip)"
+complete -f -c docker -n '__fish_docker_using_command run' -l blkioweight -d "Block IO (relative weight), between 10 and 1000"
+complete -f -c docker -n '__fish_docker_using_command run' -l cpushares -d "CPU shares (relative weight)"
+complete -f -c docker -n '__fish_docker_using_command run' -l capadd -d "Add Linux capabilities"
+complete -f -c docker -n '__fish_docker_using_command run' -l capdrop -d "Drop Linux capabilities"
+complete -f -c docker -n '__fish_docker_using_command run' -l cgroupparent -d "Optional parent cgroup for the container"
+complete -f -c docker -n '__fish_docker_using_command run' -l cidfile -d "Write the container ID to the file"
+complete -f -c docker -n '__fish_docker_using_command run' -l cpuperiod -d "Limit CPU CFS (Completely Fair Scheduler) period"
+complete -f -c docker -n '__fish_docker_using_command run' -l cpuquota -d "Limit CPU CFS (Completely Fair Scheduler) quota"
+complete -f -c docker -n '__fish_docker_using_command run' -l cpusetcpus -d "CPUs in which to allow execution (0-3, 0,1)"
+complete -f -c docker -n '__fish_docker_using_command run' -l cpusetmems -d "MEMs in which to allow execution (0-3, 0,1)"
+complete -f -c docker -n '__fish_docker_using_command run' -s d -l detach -d "Run container in background and print container ID"
+complete -f -c docker -n '__fish_docker_using_command run' -l device -d "Add a host device to the container"
+complete -f -c docker -n '__fish_docker_using_command run' -l disablecontenttrust -d "Skip image verification"
+complete -f -c docker -n '__fish_docker_using_command run' -l dns -d "Set custom DNS servers"
+complete -f -c docker -n '__fish_docker_using_command run' -l dnsopt -d "Set DNS options"
+complete -f -c docker -n '__fish_docker_using_command run' -l dnssearch -d "Set custom DNS search domains"
+complete -f -c docker -n '__fish_docker_using_command run' -s e -l env -d "Set environment variables"
+complete -f -c docker -n '__fish_docker_using_command run' -l entrypoint -d "Overwrite the default ENTRYPOINT of the image"
+complete -f -c docker -n '__fish_docker_using_command run' -l envfile -d "Read in a file of environment variables"
+complete -f -c docker -n '__fish_docker_using_command run' -l expose -d "Expose a port or a range of ports"
+complete -f -c docker -n '__fish_docker_using_command run' -l groupadd -d "Add additional groups to join"
+complete -f -c docker -n '__fish_docker_using_command run' -s h -l hostname -d "Container host name"
+complete -f -c docker -n '__fish_docker_using_command run' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command run' -s i -l interactive -d "Keep STDIN open even if not attached"
+complete -f -c docker -n '__fish_docker_using_command run' -l ipc -d "IPC namespace to use"
+complete -f -c docker -n '__fish_docker_using_command run' -l kernelmemory -d "Kernel memory limit"
+complete -f -c docker -n '__fish_docker_using_command run' -s l -l label -d "Set meta data on a container"
+complete -f -c docker -n '__fish_docker_using_command run' -l labelfile -d "Read in a line delimited file of labels"
+complete -f -c docker -n '__fish_docker_using_command run' -l link -d "Add link to another container"
+complete -f -c docker -n '__fish_docker_using_command run' -l logdriver -d "Logging driver for container"
+complete -f -c docker -n '__fish_docker_using_command run' -l logopt -d "Log driver options"
+complete -f -c docker -n '__fish_docker_using_command run' -l lxcconf -d "Add custom lxc options"
+complete -f -c docker -n '__fish_docker_using_command run' -s m -l memory -d "Memory limit"
+complete -f -c docker -n '__fish_docker_using_command run' -l macaddress -d "Container MAC address (e.g. 92:d0:c6:0a:29:33)"
+complete -f -c docker -n '__fish_docker_using_command run' -l memoryreservation -d "Memory soft limit"
+complete -f -c docker -n '__fish_docker_using_command run' -l memoryswap -d "Total memory (memory + swap), '-1' to disable swap"
+complete -f -c docker -n '__fish_docker_using_command run' -l memoryswappiness -d "Tuning container memory swappiness (0 to 100)"
+complete -f -c docker -n '__fish_docker_using_command run' -l name -d "Assign a name to the container"
+complete -f -c docker -n '__fish_docker_using_command run' -l net -d "Set the Network for the container"
+complete -f -c docker -n '__fish_docker_using_command run' -l oomkilldisable -d "Disable OOM Killer"
+complete -f -c docker -n '__fish_docker_using_command run' -s P -l publishall -d "Publish all exposed ports to random ports"
+complete -f -c docker -n '__fish_docker_using_command run' -s p -l publish -d "Publish a container's port(s) to the host"
+complete -f -c docker -n '__fish_docker_using_command run' -l pid -d "PID namespace to use"
+complete -f -c docker -n '__fish_docker_using_command run' -l privileged -d "Give extended privileges to this container"
+complete -f -c docker -n '__fish_docker_using_command run' -l readonly -d "Mount the container's root filesystem as read only"
+complete -f -c docker -n '__fish_docker_using_command run' -l restart -d "Restart policy to apply when a container exits"
+complete -f -c docker -n '__fish_docker_using_command run' -l rm -d "Automatically remove the container when it exits"
+complete -f -c docker -n '__fish_docker_using_command run' -l securityopt -d "Security Options"
+complete -f -c docker -n '__fish_docker_using_command run' -l sigproxy -d "Proxy received signals to the process"
+complete -f -c docker -n '__fish_docker_using_command run' -l stopsignal -d "Signal to stop a container, SIGTERM by default"
+complete -f -c docker -n '__fish_docker_using_command run' -s t -l tty -d "Allocate a pseudo-TTY"
+complete -f -c docker -n '__fish_docker_using_command run' -s u -l user -d "Username or UID (format: <name|uid>[:<group|gid>])"
+complete -f -c docker -n '__fish_docker_using_command run' -l ulimit -d "Ulimit options"
+complete -f -c docker -n '__fish_docker_using_command run' -l uts -d "UTS namespace to use"
+complete -f -c docker -n '__fish_docker_using_command run' -s v -l volume -d "Bind mount a volume"
+complete -f -c docker -n '__fish_docker_using_command run' -l volumedriver -d "Optional volume driver for the container"
+complete -f -c docker -n '__fish_docker_using_command run' -l volumesfrom -d "Mount volumes from the specified container(s)"
+complete -f -c docker -n '__fish_docker_using_command run' -s w -l workdir -d "Working directory inside the container"
+
+## save
+complete -f -c docker -n '__fish_docker_needs_command' -a save -d "Save an image(s) to a tar archive"
+complete -f -c docker -n '__fish_docker_using_command save' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command save' -s o -l output -d "Write to a file, instead of STDOUT"
+
+## search
+complete -f -c docker -n '__fish_docker_needs_command' -a search -d "Search the Docker Hub for images"
+complete -f -c docker -n '__fish_docker_using_command search' -l automated -d "Only show automated builds"
+complete -f -c docker -n '__fish_docker_using_command search' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command search' -l notrunc -d "Don't truncate output"
+complete -f -c docker -n '__fish_docker_using_command search' -s s -l stars -d "Only displays with at least x stars"
+
+## start
+complete -f -c docker -n '__fish_docker_needs_command' -a start -d "Start one or more stopped containers"
+complete -f -c docker -n '__fish_docker_using_command start' -s a -l attach -d "Attach STDOUT/STDERR and forward signals"
+complete -f -c docker -n '__fish_docker_using_command start' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command start' -s i -l interactive -d "Attach container's STDIN"
+
+## stats
+complete -f -c docker -n '__fish_docker_needs_command' -a stats -d "Display a live stream of container(s) resource usage statistics"
+complete -f -c docker -n '__fish_docker_using_command stats' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command stats' -l nostream -d "Disable streaming stats and only pull the first result"
+
+## stop
+complete -f -c docker -n '__fish_docker_needs_command' -a stop -d "Stop a running container"
+complete -f -c docker -n '__fish_docker_using_command stop' -l help -d "Print usage"
+complete -f -c docker -n '__fish_docker_using_command stop' -s t -l time -d "Seconds to wait for stop before killing it"
+
+## tag
+complete -f -c docker -n '__fish_docker_needs_command' -a tag -d "Tag an image into a repository"
+complete -f -c docker -n '__fish_docker_using_command tag' -s f -l force -d "Force"
+complete -f -c docker -n '__fish_docker_using_command tag' -l help -d "Print usage"
+
+## top
+complete -f -c docker -n '__fish_docker_needs_command' -a top -d "Display the running processes of a container"
+complete -f -c docker -n '__fish_docker_using_command top' -l help -d "Print usage"
+
+## unpause
+complete -f -c docker -n '__fish_docker_needs_command' -a unpause -d "Unpause all processes within a container"
+complete -f -c docker -n '__fish_docker_using_command unpause' -l help -d "Print usage"
+
+## version
+complete -f -c docker -n '__fish_docker_needs_command' -a version -d "Show the Docker version information"
+complete -f -c docker -n '__fish_docker_using_command version' -s f -l format -d "Format the output using the given go template"
+complete -f -c docker -n '__fish_docker_using_command version' -l help -d "Print usage"
+
+## volume
+complete -f -c docker -n '__fish_docker_needs_command' -a volume -d "Manage Docker volumes"
+complete -f -c docker -n '__fish_docker_using_command volume' -l help -d "Print usage"
+
+## wait
+complete -f -c docker -n '__fish_docker_needs_command' -a wait -d "Block until a container stops, then print its exit code"
+complete -f -c docker -n '__fish_docker_using_command wait' -l help -d "Print usage"
