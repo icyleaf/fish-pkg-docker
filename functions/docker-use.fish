@@ -1,4 +1,4 @@
-function docker-use -a name -d "Switch docker machine"
+function docker-use -a name -a '(__fish_docker_machines) '-d "Switch docker machine"
   __fish_docker_machines
 
   if [ -z $name ]

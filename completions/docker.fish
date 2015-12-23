@@ -1,4 +1,3 @@
-# See → fishshell.com/docs/current/commands.html#complete
 function __fish_docker_needs_command
   set cmd (commandline -opc)
   if [ (count $cmd) -eq 1 ]

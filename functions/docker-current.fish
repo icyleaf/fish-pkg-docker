@@ -18,7 +18,7 @@ function docker-current -d "Show current used docker machine"
       set machine_status (docker-machine ls | grep $DOCKER_MACHINE_NAME | awk '{print $4}')
       set machine_ip (echo $DOCKER_HOST | awk '{split($0, a, ":"); gsub("//", "", a[2]); print a[2]}')
 
-      echo "Name:$DOCKER_MACHINE_NAME"
+      echo "Name: $DOCKER_MACHINE_NAME"
       echo "IP: $machine_ip"
       echo "Status: $machine_status"
     else

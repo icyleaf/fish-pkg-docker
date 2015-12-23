@@ -43,20 +43,21 @@ def completion_command(name, line)
   }
 end
 
-task :completions do
-  output = `docker --help`.split("\n")
-  options = output.select {|line| line.match(/^\s{2}-/) }#.map {|s| s.strip.split(/\s{2,10}/)}
-  commands = output.select { |line| line.match(/^\s{4}(\w+)\s/) }#.map {|s| s.strip.split(/\s{2,10}/)}
+task :complete, :name do |task, options|
+  name = options[:name] || 'docker'
+  output = `#{name} --help`.split("\n")
+  options = output.select {|line| line.match(/^\s{2,10}-/) }#.map {|s| s.strip.split(/\s{2,10}/)}
+  commands = output.select { |line| line.match(/^\s{2,10}(\w+)\s/) }#.map {|s| s.strip.split(/\s{2,10}/)}
 
   puts "# Options"
   options.each do |line|
-    puts completion_options('docker', line).join(" ")
+    puts completion_options(name, line).join(" ")
   end
   puts "\n"
 
   puts "# Subcommands"
   commands.each do |line|
-    data = completion_command('docker', line)
+    data = completion_command(name, line)
     puts "## #{data[:command]}"
     puts data[:complete].join(" ")
     data[:options].each do |complete|
