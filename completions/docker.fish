@@ -31,10 +31,6 @@ function __fish_docker_ps_container_names
   end
 end
 
-function __fish_docker_ps_image_names
-  set containers (docker ps -a | awk '{print $2}' | grep -v IMAGE)
-end
-
 # Options
 complete -f -c docker -n '__fish_docker_needs_command' -l config -d "Location of client config files"
 complete -f -c docker -n '__fish_docker_needs_command' -s D -l debug -d "Enable debug mode"
@@ -80,6 +76,7 @@ complete -f -c docker -n '__fish_docker_using_command build' -l ulimit -d "Ulimi
 
 ## commit
 complete -f -c docker -n '__fish_docker_needs_command' -a commit -d "Create a new image from a container's changes"
+complete -f -c docker -n '__fish_docker_using_command commit' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command commit' -s a -l author -d "Author (e.g., \"John Hannibal Smith <hannibal@a-team.com>\")"
 complete -f -c docker -n '__fish_docker_using_command commit' -s c -l change -d "Apply Dockerfile instruction to the created image"
 complete -f -c docker -n '__fish_docker_using_command commit' -l help -d "Print usage"
@@ -88,10 +85,12 @@ complete -f -c docker -n '__fish_docker_using_command commit' -s p -l pause -d "
 
 ## cp
 complete -f -c docker -n '__fish_docker_needs_command' -a cp -d "Copy files/folders between a container and the local filesystem"
+complete -f -c docker -n '__fish_docker_using_command cp' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command cp' -l help -d "Print usage"
 
 ## create
 complete -f -c docker -n '__fish_docker_needs_command' -a create -d "Create a new container"
+complete -f -c docker -n '__fish_docker_using_command create' -a '(__fish_docker_image_names)'
 complete -f -c docker -n '__fish_docker_using_command create' -s a -l attach -d "Attach to STDIN, STDOUT or STDERR"
 complete -f -c docker -n '__fish_docker_using_command create' -l addhost -d "Add a custom host-to-IP mapping (host:ip)"
 complete -f -c docker -n '__fish_docker_using_command create' -l blkioweight -d "Block IO (relative weight), between 10 and 1000"
@@ -152,6 +151,7 @@ complete -f -c docker -n '__fish_docker_using_command create' -s w -l workdir -d
 
 ## diff
 complete -f -c docker -n '__fish_docker_needs_command' -a diff -d "Inspect changes on a container's filesystem"
+complete -f -c docker -n '__fish_docker_using_command diff' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command diff' -l help -d "Print usage"
 
 ## events
@@ -163,6 +163,7 @@ complete -f -c docker -n '__fish_docker_using_command events' -l until -d "Strea
 
 ## exec
 complete -f -c docker -n '__fish_docker_needs_command' -a exec -d "Run a command in a running container"
+complete -f -c docker -n '__fish_docker_using_command exec' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command exec' -s d -l detach -d "Detached mode: run command in the background"
 complete -f -c docker -n '__fish_docker_using_command exec' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command exec' -s i -l interactive -d "Keep STDIN open even if not attached"
@@ -172,11 +173,13 @@ complete -f -c docker -n '__fish_docker_using_command exec' -s u -l user -d "Use
 
 ## export
 complete -f -c docker -n '__fish_docker_needs_command' -a export -d "Export a container's filesystem as a tar archive"
+complete -f -c docker -n '__fish_docker_using_command export' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command export' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command export' -s o -l output -d "Write to a file, instead of STDOUT"
 
 ## history
 complete -f -c docker -n '__fish_docker_needs_command' -a history -d "Show the history of an image"
+complete -f -c docker -n '__fish_docker_using_command history' -a '(__fish_docker_image_names)'
 complete -f -c docker -n '__fish_docker_using_command history' -s H -l human -d "Print sizes and dates in human readable format"
 complete -f -c docker -n '__fish_docker_using_command history' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command history' -l notrunc -d "Don't truncate output"
@@ -211,6 +214,7 @@ complete -f -c docker -n '__fish_docker_using_command inspect' -l type -d "Retur
 
 ## kill
 complete -f -c docker -n '__fish_docker_needs_command' -a kill -d "Kill a running container"
+complete -f -c docker -n '__fish_docker_using_command kill' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command kill' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command kill' -s s -l signal -d "Signal to send to the container"
 
@@ -249,6 +253,7 @@ complete -f -c docker -n '__fish_docker_using_command pause' -l help -d "Print u
 
 ## port
 complete -f -c docker -n '__fish_docker_needs_command' -a port -d "List port mappings or a specific mapping for the CONTAINER"
+complete -f -c docker -n '__fish_docker_using_command port' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command port' -l help -d "Print usage"
 
 ## ps
@@ -274,6 +279,7 @@ complete -f -c docker -n '__fish_docker_using_command pull' -l help -d "Print us
 
 ## push
 complete -f -c docker -n '__fish_docker_needs_command' -a push -d "Push an image or a repository to a registry"
+complete -f -c docker -n '__fish_docker_using_command push' -a '(__fish_docker_image_names)'
 complete -f -c docker -n '__fish_docker_using_command push' -l disablecontenttrust -d "Skip image signing"
 complete -f -c docker -n '__fish_docker_using_command push' -l help -d "Print usage"
 
@@ -284,11 +290,13 @@ complete -f -c docker -n '__fish_docker_using_command rename' -l help -d "Print 
 
 ## restart
 complete -f -c docker -n '__fish_docker_needs_command' -a restart -d "Restart a container"
+complete -f -c docker -n '__fish_docker_using_command restart' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command restart' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command restart' -s t -l time -d "Seconds to wait for stop before killing the container"
 
 ## rm
 complete -f -c docker -n '__fish_docker_needs_command' -a rm -d "Remove one or more containers"
+complete -f -c docker -n '__fish_docker_using_command rm' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command rm' -s f -l force -d "Force the removal of a running container (uses SIGKILL)"
 complete -f -c docker -n '__fish_docker_using_command rm' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command rm' -s l -l link -d "Remove the specified link"
@@ -296,12 +304,14 @@ complete -f -c docker -n '__fish_docker_using_command rm' -s v -l volumes -d "Re
 
 ## rmi
 complete -f -c docker -n '__fish_docker_needs_command' -a rmi -d "Remove one or more images"
+complete -f -c docker -n '__fish_docker_using_command rmi' -a '(__fish_docker_image_names)'
 complete -f -c docker -n '__fish_docker_using_command rmi' -s f -l force -d "Force removal of the image"
 complete -f -c docker -n '__fish_docker_using_command rmi' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command rmi' -l noprune -d "Do not delete untagged parents"
 
 ## run
 complete -f -c docker -n '__fish_docker_needs_command' -a run -d "Run a command in a new container"
+complete -f -c docker -n '__fish_docker_using_command run' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command run' -s a -l attach -d "Attach to STDIN, STDOUT or STDERR"
 complete -f -c docker -n '__fish_docker_using_command run' -l addhost -d "Add a custom host-to-IP mapping (host:ip)"
 complete -f -c docker -n '__fish_docker_using_command run' -l blkioweight -d "Block IO (relative weight), between 10 and 1000"
@@ -365,6 +375,7 @@ complete -f -c docker -n '__fish_docker_using_command run' -s w -l workdir -d "W
 
 ## save
 complete -f -c docker -n '__fish_docker_needs_command' -a save -d "Save an image(s) to a tar archive"
+complete -f -c docker -n '__fish_docker_using_command save' -a '(__fish_docker_image_names)'
 complete -f -c docker -n '__fish_docker_using_command save' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command save' -s o -l output -d "Write to a file, instead of STDOUT"
 
@@ -377,31 +388,37 @@ complete -f -c docker -n '__fish_docker_using_command search' -s s -l stars -d "
 
 ## start
 complete -f -c docker -n '__fish_docker_needs_command' -a start -d "Start one or more stopped containers"
+complete -f -c docker -n '__fish_docker_using_command start' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command start' -s a -l attach -d "Attach STDOUT/STDERR and forward signals"
 complete -f -c docker -n '__fish_docker_using_command start' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command start' -s i -l interactive -d "Attach container's STDIN"
 
 ## stats
 complete -f -c docker -n '__fish_docker_needs_command' -a stats -d "Display a live stream of container(s) resource usage statistics"
+complete -f -c docker -n '__fish_docker_using_command stats' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command stats' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command stats' -l nostream -d "Disable streaming stats and only pull the first result"
 
 ## stop
 complete -f -c docker -n '__fish_docker_needs_command' -a stop -d "Stop a running container"
+complete -f -c docker -n '__fish_docker_using_command stop' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command stop' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command stop' -s t -l time -d "Seconds to wait for stop before killing it"
 
 ## tag
 complete -f -c docker -n '__fish_docker_needs_command' -a tag -d "Tag an image into a repository"
+complete -f -c docker -n '__fish_docker_using_command tag' -a '(__fish_docker_image_names)'
 complete -f -c docker -n '__fish_docker_using_command tag' -s f -l force -d "Force"
 complete -f -c docker -n '__fish_docker_using_command tag' -l help -d "Print usage"
 
 ## top
 complete -f -c docker -n '__fish_docker_needs_command' -a top -d "Display the running processes of a container"
+complete -f -c docker -n '__fish_docker_using_command top' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command top' -l help -d "Print usage"
 
 ## unpause
 complete -f -c docker -n '__fish_docker_needs_command' -a unpause -d "Unpause all processes within a container"
+complete -f -c docker -n '__fish_docker_using_command unpause' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command unpause' -l help -d "Print usage"
 
 ## version
@@ -415,4 +432,5 @@ complete -f -c docker -n '__fish_docker_using_command volume' -l help -d "Print 
 
 ## wait
 complete -f -c docker -n '__fish_docker_needs_command' -a wait -d "Block until a container stops, then print its exit code"
+complete -f -c docker -n '__fish_docker_using_command wait' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command wait' -l help -d "Print usage"
