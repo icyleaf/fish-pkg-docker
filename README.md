@@ -31,10 +31,10 @@ $ omf install https://github.com/icyleaf/fish-pkg-docker
 
 ## Functions
 
-function | description
----|---
-docker-current | Show current used docker machine
-docker-use | Switch docker machine(include reload environment variables)
+function | params | description
+---|---|---
+docker-current |  | Show current used docker machine
+docker-use | `name` | Switch docker machine by name(include reload environment variables)
 
 # License
 
