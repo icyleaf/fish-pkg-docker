@@ -232,6 +232,7 @@ complete -f -c docker -n '__fish_docker_using_command logout' -l help -d "Print 
 
 ## logs
 complete -f -c docker -n '__fish_docker_needs_command' -a logs -d "Fetch the logs of a container"
+complete -f -c docker -n '__fish_docker_using_command logs' -a '(__fish_docker_ps_container_names)'
 complete -f -c docker -n '__fish_docker_using_command logs' -s f -l follow -d "Follow log output"
 complete -f -c docker -n '__fish_docker_using_command logs' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command logs' -l since -d "Show logs since timestamp"
