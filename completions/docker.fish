@@ -80,7 +80,7 @@ complete -f -c docker -n '__fish_docker_using_command build' -l ulimit -d "Ulimi
 
 ## commit
 complete -f -c docker -n '__fish_docker_needs_command' -a commit -d "Create a new image from a container's changes"
-complete -f -c docker -n '__fish_docker_using_command commit' -s a -l author -d "Author (e.g., "John Hannibal Smith <hannibal@a-team.com>")"
+complete -f -c docker -n '__fish_docker_using_command commit' -s a -l author -d "Author (e.g., \"John Hannibal Smith <hannibal@a-team.com>\")"
 complete -f -c docker -n '__fish_docker_using_command commit' -s c -l change -d "Apply Dockerfile instruction to the created image"
 complete -f -c docker -n '__fish_docker_using_command commit' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command commit' -s m -l message -d "Commit message"
