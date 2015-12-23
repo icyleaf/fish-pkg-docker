@@ -207,6 +207,8 @@ complete -f -c docker -n '__fish_docker_using_command info' -l help -d "Print us
 
 ## inspect
 complete -f -c docker -n '__fish_docker_needs_command' -a inspect -d "Return low-level information on a container or image"
+complete -f -c docker -n '__fish_docker_using_command inspect' -a '(__fish_docker_ps_container_names)'
+complete -f -c docker -n '__fish_docker_using_command inspect' -a '(__fish_docker_image_names)'
 complete -f -c docker -n '__fish_docker_using_command inspect' -s f -l format -d "Format the output using the given go template"
 complete -f -c docker -n '__fish_docker_using_command inspect' -l help -d "Print usage"
 complete -f -c docker -n '__fish_docker_using_command inspect' -s s -l size -d "Display total file sizes if the type is container"
