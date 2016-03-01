@@ -40,11 +40,11 @@ docker-use | `name` | Switch docker machine by name(include reload environment v
 
 Now supported:
 
-[x] docker
-[x] docker-machine
-[x] docker-compose
-[ ] docker-swarm
-[ ] docker-cloud
+- [x] docker
+- [x] docker-machine
+- [x] docker-compose
+- [ ] docker-swarm
+- [ ] docker-cloud
 
 # License
 
