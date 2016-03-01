@@ -36,6 +36,16 @@ function | params | description
 docker-current |  | Show current used docker machine
 docker-use | `name` | Switch docker machine by name(include reload environment variables)
 
+## Completions
+
+Now supported:
+
+[x] docker
+[x] docker-machine
+[x] docker-compose
+[ ] docker-swarm
+[ ] docker-cloud
+
 # License
 
 [MIT][mit] © [icyleaf][author]
