@@ -13,18 +13,18 @@ a variable to set to change default machine name:
 
 set -gx DOCKER_DEFAULT_MACHINE "dev"
 
-# Load wa/omf init script
+# Load fisher/omf init script
 ```
 
 Tab completion just added basic subcommand description. enjoy it.
 
-Works for [Wahoo][Wahoo-link]/[Oh My Fish][omf-link].
+Works for [Fisherman][Fisherman-link]/[Oh My Fish][omf-link].
 
 ## Install
 
 ```fish
-# wahoo
-$ wa g https://github.com/icyleaf/fish-pkg-docker
+# Fisherman
+$ fisher install icyleaf/fish-pkg-docker
 # oh-my-fish
 $ omf install https://github.com/icyleaf/fish-pkg-docker
 ```
@@ -44,7 +44,7 @@ docker-use | `name` | Switch docker machine by name(include reload environment v
 [mit]:            http://opensource.org/licenses/MIT
 [author]:         http://github.com/icyleaf
 
-[wahoo-link]:     https://www.github.com/wa/wahoo
+[fisherman-link]:     https://www.github.com/fisherman/fisherman
 [omf-link]:       https://www.github.com/oh-my-fish/oh-my-fish
 
 [license-badge]:  https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square

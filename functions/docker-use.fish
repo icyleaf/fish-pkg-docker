@@ -15,7 +15,7 @@ function docker-use -a name -d "Switch docker machine"
     if [ $is_found = "true" ]
       docker-machine start $name
       echo "Success to switch."
-      __fish_docker_machine_loading_env $name
+      __fish_docker_machine_apply $name
     else
       echo "Not found docker machine: $name"
     end
